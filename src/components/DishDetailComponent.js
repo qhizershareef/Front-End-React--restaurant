@@ -15,9 +15,11 @@ const DishDetail = ({ dish }) => {
     }
     let dishItem = renderDish(Dish);
     return (
-        <div className="row">
-            {dishItem}
-            {dishComments}
+        <div className="container">
+            <div className="row">
+                {dishItem}
+                {dishComments}
+            </div>
         </div>
     )
 }
@@ -25,7 +27,7 @@ function renderDish(dish) {
     //console.log(dish);
     return (
         <div className="col-12 col-md-5 m-1">
-            <Card >
+            <Card key={dish.id} >
                 <CardImg width="100%" src={dish.image} alt={dish.name} />
                 <CardBody>
                     <CardText>{dish.description}</CardText>
@@ -41,8 +43,8 @@ function renderComments(dish) {
     const cmmnts = dish.comments.map(comment => {
         //refer moment.js to create date format 'MMMM,Do,YYYY'
         return (
-            <div className="container">
-                <div key={comment.id}>
+            <div key={comment.id}>
+                <div >
                     <p>{comment.comment}</p>
                     <p>--{comment.author}, {Moment(comment.date).format('MMMM, Do ,YYYY')}</p>
                 </div>
@@ -51,7 +53,7 @@ function renderComments(dish) {
         )
     })
     return (
-        <div className="col-md-5 col-12 mt-3">
+        <div className="col-md-5 col-12 m-1">
             <h3>Comments :</h3>
             <div>
                 {cmmnts}
