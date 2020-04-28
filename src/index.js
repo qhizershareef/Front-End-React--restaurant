@@ -5,17 +5,15 @@ import App from './App';
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
-import 'bootstrap-social/bootstrap-social.css';
+import "bootstrap-social/bootstrap-social.css";
 import * as serviceWorker from './serviceWorker';
 
+
+//lets try without strict mode <React.StrictMode>
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+ 
+    <App />,
   document.getElementById('root')
 );
-//ReactDOM.render(<App/>,document.getElementById('root2'));
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+
 serviceWorker.unregister();
