@@ -69,9 +69,9 @@ class Contact extends Component {
         if(!reg.test(this.state.telnum) && this.state.touched.telnum)
             errors.telnum="Telnum should only consist of numbers";
         
-        if(this.state.touched.email && this.state.email.split('').filter(x=> x==='@').length!==1)
-            errors.email="Enter a Valid Email address."
-
+        if(this.state.touched.email && !this.state.email.includes('@'))
+            errors.email="Enter a Valid Email address with @";
+            
         return errors;
     }
     render() {
