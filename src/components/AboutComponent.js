@@ -11,8 +11,7 @@ const RenderLeader=({leader})=>{
         
     }
     return(
-        <div  className="col-10 mt-5">
-            <Media tag="li">
+            <Media tag="div" className="col-10 mt-5"  key={leader.id} >
                 <Media left middle>
                     <Media object src={leader.image} alt={leader.name} />
                 </Media>
@@ -22,7 +21,6 @@ const RenderLeader=({leader})=>{
                     <p>{leader.description}</p>
                 </Media>
             </Media>
-        </div>
     )
     
 }
@@ -32,7 +30,9 @@ function About(props) {
     const leaders = props.leaders.map((leader) => {
         return (
             /*<p>Leader {leader.name}</p>*/
-            <RenderLeader leader={leader}/>
+            <div  key={leader.id}>
+                <RenderLeader leader={leader} />
+            </div>
         );
     });
 
@@ -100,5 +100,7 @@ function About(props) {
         </div>
     );
 }
+
+//initially it was at bottom <Media>{leader}<Media>
 
 export default About;   
