@@ -1,8 +1,7 @@
 //reducer.js pure function: redux, to provide state to whole program, storing the state ex: below are js object storing info of various
-import {DISHES } from '../shared/dishes';
-import {COMMENTS} from '../shared/comments';
+
 import {LEADERS} from '../shared/leaders';
-import {PROMOTIONS} from '../shared/promotions'
+
 
 export const initialState= {
         dishes: DISHES,
