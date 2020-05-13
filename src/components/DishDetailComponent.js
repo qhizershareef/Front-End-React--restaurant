@@ -24,8 +24,10 @@ export class CommentForm extends Component {
         })
         //alert(this.state.isModalOpen + " is the current state");
     }
-    submitHandle(value){
-        alert(JSON.stringify(value));
+    submitHandle(values){
+        this.toggleModal();
+        alert(JSON.stringify(values));
+        this.props.addComment(this.props.dishId,values.rating,values.author,values.comment);
     }
     render() {
         return (
@@ -110,6 +112,7 @@ export class CommentForm extends Component {
 
 
 /* DishDetail Component, below the dishes describe and show comments as a card */
+//this DishDetail component below is the same component passed from main with addComment in it
 const DishDetail = (props) => {
     console.log(props);
     //console.log(dish);
@@ -117,7 +120,7 @@ const DishDetail = (props) => {
     const Dish = dish;  //note that the props is given a name and that is used as this.props.<name assigned to var>
     //const DishProps= this.props.selectedDish;
     console.log('this is any name for the props', Dish);
-    let dishComments = renderComments(props.comments);
+    let dishComments = renderComments(props);
     //console.log(Dish);
     if (Dish == null) {
         return (<div>None Selected</div>)
@@ -158,18 +161,20 @@ function renderDish(dish) {
         </div>
     )
 }
-function renderComments(dish) {
+function renderComments({addComment,comments,dish}) {
     console.log(dish)
-    if (dish == null) {
+    console.log(dish[0].id);
+    const dishId=dish[0].id;
+    if (comments == null) {
         return (<div>No Comments</div>)
     }
-    const cmmnts = dish.map(comment => {
+    const cmmnts = comments.map(comment => {
         //refer moment.js to create date format 'MMMM,Do,YYYY'
         return (
             <div key={comment.id}>
                 <div >
                     <p>{comment.comment}</p>
-                    <p>--{comment.author}, {Moment(comment.date).format('MMMM, Do ,YYYY')}</p>
+                    <p>--{comment.author}, {Moment(comment.date).format('MMMM, Do ,YYYY') || comment.date}</p>
                 </div>
             </div>
         )
@@ -179,7 +184,7 @@ function renderComments(dish) {
             <h3>Comments :</h3>
             <div>
                 {cmmnts}
-                <CommentForm />
+                <CommentForm dishId={dishId} addComment={addComment}/>
             </div>
         </div>
     )

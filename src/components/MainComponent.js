@@ -9,6 +9,7 @@ import Contact from './ContactComponent';
 import About from './AboutComponent';
 import {Switch,Route,Redirect,withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {addComment} from '../redux/ActionCreators';
 // here the dishes,comments etc are received as props from App.js Provider component, since we used redux to handle this
 // there are methods provided by redux inorder to connect the state to Main component or other component
 const mapStateToProps = state=>{
@@ -19,6 +20,10 @@ const mapStateToProps = state=>{
         leaders:state.leaders,
     }
 }
+
+const mapDispatchToProps = dispatch =>({
+    addComment:(dishId,rating,author,comment)=>dispatch(addComment(dishId,rating,author,comment)) //firstly addComment is called within dishDetail component thereby the props are passed to dispatch then it gets added to comment array
+})
 
 class Main extends Component {
     constructor(props) {
@@ -38,7 +43,9 @@ class Main extends Component {
             return(
                 <DishDetail 
                     dish={this.props.dishes.filter((dish)=> dish.id=== parseInt(match.params.dishId,10) )}
-                    comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
+                    comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+                    addComment={this.props.addComment}
+                />
             )
         }
 
@@ -66,4 +73,4 @@ class Main extends Component {
         );
     }
 }
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Main));
