@@ -4,6 +4,7 @@ import { Card, CardImg, CardBody, CardText, Breadcrumb, BreadcrumbItem, Button, 
 import Moment from 'moment';
 import { Link } from 'react-router-dom';
 import {LocalForm, Control, Errors} from 'react-redux-form';
+import {Loading} from './LoadingComponent';
 
 const maxLength =(len)=>(val)=> !(val) || val.length <=15;
 const minLength = (len) => (val) => val && (val.length >= len);
@@ -25,6 +26,7 @@ export class CommentForm extends Component {
         //alert(this.state.isModalOpen + " is the current state");
     }
     submitHandle(values){
+        //to understand how the comment is added go from here, first we handle submit by calling addcomment which is somehow linked to redux action
         this.toggleModal();
         alert(JSON.stringify(values));
         this.props.addComment(this.props.dishId,values.rating,values.author,values.comment);
@@ -115,41 +117,59 @@ export class CommentForm extends Component {
 //this DishDetail component below is the same component passed from main with addComment in it
 const DishDetail = (props) => {
     console.log(props);
+    //props={addComment,dish,comments}
     //console.log(dish);
-    const dish = props.dish[0];
+    const dish = props.dish;
     const Dish = dish;  //note that the props is given a name and that is used as this.props.<name assigned to var>
     //const DishProps= this.props.selectedDish;
     console.log('this is any name for the props', Dish);
-    let dishComments = renderComments(props);
+    
     //console.log(Dish);
-    if (Dish == null) {
-        return (<div>None Selected</div>)
-    }
-    let dishItem = renderDish(Dish);
-    return (
-        <div className="container">
-            <div className="row">
-                <Breadcrumb>
-
-                    <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-                    <BreadcrumbItem active>{props.dish[0].name}</BreadcrumbItem>
-                </Breadcrumb>
-                <div className="col-12">
-                    <h3>{props.dish.name}</h3>
-                    <hr />
+    //if (Dish == null) {
+    //    return (<div>None Selected</div>)
+    //}
+    if(props.isLoading){
+        return(
+            <div className="container">
+                <div className="row">            
+                    <Loading />
                 </div>
-
             </div>
-            <div className="row">
-                {dishItem}
-                {dishComments}
-
+        );
+    }
+    else if (props.errMess) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <h4>{props.errMess}</h4>
+                </div>
             </div>
-        </div>
-    )
+        );
+    }
+    
+    else if(dish!=null){
+        return (
+            <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr />
+                    </div>
+                </div>
+                <div className="row">
+                    <RenderDish dish={props.dish}/>
+                    <RenderComments addComment={props.addComment} dish={props.dish} comments={props.comments}/>
+                 </div>
+            </div>
+        )
+    }
 }
-function renderDish(dish) {
-    //console.log(dish);
+function RenderDish({dish}) {
+    console.log(dish);
     return (
         <div className="col-12 col-md-5 m-1">
             <Card key={dish.id} >
@@ -161,10 +181,10 @@ function renderDish(dish) {
         </div>
     )
 }
-function renderComments({addComment,comments,dish}) {
+function RenderComments({addComment,comments,dish}) {
     console.log(dish)
-    console.log(dish[0].id);
-    const dishId=dish[0].id;
+    console.log(dish.id);
+    const dishId=dish.id;
     if (comments == null) {
         return (<div>No Comments</div>)
     }
