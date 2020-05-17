@@ -10,6 +10,7 @@ import About from './AboutComponent';
 import {Switch,Route,Redirect,withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {addComment, fetchDishes} from '../redux/ActionCreators';
+import {actions} from 'react-redux-form';
 // here the dishes,comments etc are received as props from App.js Provider component, since we used redux to handle this
 // there are methods provided by redux inorder to connect the state to Main component or other component
 const mapStateToProps = state=>{
@@ -23,8 +24,9 @@ const mapStateToProps = state=>{
 
 const mapDispatchToProps = dispatch =>({
     addComment:(dishId,rating,author,comment)=>dispatch(addComment(dishId,rating,author,comment)), //firstly addComment is called within dishDetail component thereby the props are passed to dispatch then it gets added to comment array
-    fetchDishes:()=>{dispatch(fetchDishes())}
-
+    fetchDishes:()=>{dispatch(fetchDishes())},
+    resetFeedbackForm:()=>{dispatch(actions.reset('feedback'))},//'feedback' here is the model name which is contact
+    //pass this reset as props to contact compo
 })
 
 
@@ -71,7 +73,7 @@ class Main extends Component {
                     <Route path="/home" component={HomePage}/>
                     <Route exact path="/menu" component={()=> <Menu dishes={this.props.dishes}/>}/>
                     <Route path="/menu/:dishId" component={DishWithId} />
-                    <Route exact path="/contactus" component={Contact} />
+                    <Route exact path="/contactus" component={()=><Contact reset={this.props.resetFeedbackForm}/>} />
                     <Route exact path="/aboutus" component={AboutUs} />
                     <Redirect to="/home" /> {/* default */}
                 </Switch>
