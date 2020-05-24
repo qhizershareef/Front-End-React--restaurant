@@ -1,33 +1,7 @@
 import React from 'react';
 import {Card,CardBody,CardImg,CardText,CardTitle,CardSubtitle} from 'reactstrap';
 import {Loading} from './LoadingComponent';
-
-function RenderCard({item,isLoading, errMess}) {
-    if(isLoading){
-        return(
-            <Loading/>
-        );
-    }
-    else if(errMess){
-        return(
-            <h4>{errMess}</h4>
-        )
-    }
-    else{
-        return(
-            <Card>
-                <CardImg src={item.image} alt={item.name} />
-                <CardBody>
-                <CardTitle>{item.name}</CardTitle>
-                {item.designation ? <CardSubtitle>{item.designation}</CardSubtitle> : null }
-                <CardText>{item.description}</CardText>
-                </CardBody>
-            </Card>
-        );
-    }
-        
-
-}
+import {baseUrl} from '../shared/baseUrl';
 
 function Home(props){
     return(
@@ -39,14 +13,42 @@ function Home(props){
                     <RenderCard item={props.dish} isLoading={props.dishesLoading} errMess={props.dishesErrMess} />
                 </div>
                 <div className="col-12 col-md">
-                    <RenderCard item={props.promotion} />
+                    <RenderCard item={props.promotion} isLoading={props.promoLoading} errMess={props.promoErrMess} />
                 </div>
                 <div className="col-12 col-md">
-                    <RenderCard item={props.leader} />
+                     <RenderCard item={props.leader}/>
                 </div>
             </div>
         </div>
     );
+}
+
+function RenderCard({item,isLoading, errMess}) {
+    
+    console.log(item,'errMess: '+errMess,'isLoading :'+isLoading);
+    if(isLoading){
+        return(
+            <Loading/>
+        );
+    }
+    else if(errMess){
+        return(
+            <h4>{errMess}</h4>
+        )
+    }
+    else{
+        console.log(item);
+        return(
+            <Card>
+                <CardImg src={baseUrl + item.image} alt={item.name} />
+                <CardBody>
+                    <CardTitle>{item.name}</CardTitle>
+                    {item.designation ? <CardSubtitle>{item.designation}</CardSubtitle> : null }
+                    <CardText>{item.description}</CardText>
+                </CardBody>
+            </Card>
+        );
+    }       
 }
 
 export default Home;
