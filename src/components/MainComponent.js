@@ -9,7 +9,7 @@ import Contact from './ContactComponent';
 import About from './AboutComponent';
 import {Switch,Route,Redirect,withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {addComment, fetchDishes, fetchComments, fetchPromos} from '../redux/ActionCreators';
+import {postComment, fetchDishes, fetchComments, fetchPromos} from '../redux/ActionCreators';
 import {actions} from 'react-redux-form';
 // here the dishes,comments etc are received as props from App.js Provider component, since we used redux to handle this
 // there are methods provided by redux inorder to connect the state to Main component or other component
@@ -23,7 +23,7 @@ const mapStateToProps = state=>{
 }
 
 const mapDispatchToProps = dispatch =>({
-    addComment:(dishId,rating,author,comment)=>dispatch(addComment(dishId,rating,author,comment)), //firstly addComment is called within dishDetail component thereby the props are passed to dispatch then it gets added to comment array
+    postComment:(dishId,rating,author,comment)=>dispatch(postComment(dishId,rating,author,comment)), //firstly addComment is called within dishDetail component thereby the props are passed to dispatch then it gets added to comment array
     fetchDishes:()=>{dispatch(fetchDishes())},
     resetFeedbackForm:()=>{dispatch(actions.reset('feedback'))},//'feedback' here is the model name which is contact
     //pass this reset as props to contact compo
@@ -61,7 +61,7 @@ class Main extends Component {
                     errMess={this.props.dishes.errMess}
                     comments={this.props.comments.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
                     commentErrMess={this.props.comments.errMess}
-                    addComment={this.props.addComment}
+                    postComment={this.props.postComment}
                 />
             )
         }

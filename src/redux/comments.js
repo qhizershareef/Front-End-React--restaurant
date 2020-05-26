@@ -9,8 +9,8 @@ export const Comments=(state={errMess:null, comments:[],},action)=>{
             return {...state, errMess:action.payload}
         case ActionType.ADD_COMMENT:
             var comment= action.payload;
-            comment.id= state.comments.length;//here state means COmment which is an array so id is the index of that element;
-            comment.date= new Date().toISOString();
+            //comment.id= state.comments.length;//here state means COmment which is an array so id is the index of that element;
+            //comment.date= new Date().toISOString();
             //console.log("comment: "+ comment);
             return {...state,comments:state.comments.concat(comment)};
 

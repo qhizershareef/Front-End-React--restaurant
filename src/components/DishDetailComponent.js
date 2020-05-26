@@ -32,7 +32,7 @@ export class CommentForm extends Component {
         //to understand how the comment is added go from here, first we handle submit by calling addcomment which is somehow linked to redux action
         this.toggleModal();
         alert(JSON.stringify(values));
-        this.props.addComment(this.props.dishId,values.rating,values.author,values.comment);
+        this.props.postComment(this.props.dishId,values.rating,values.author,values.comment);
     }
     render() {
         return (
@@ -165,7 +165,7 @@ const DishDetail = (props) => {
                 </div>
                 <div className="row">
                     <RenderDish dish={props.dish}/>
-                    <RenderComments addComment={props.addComment} dish={props.dish} comments={props.comments}/>
+                    <RenderComments postComment={props.postComment} dish={props.dish} comments={props.comments}/>
                  </div>
             </div>
         )
@@ -184,7 +184,7 @@ function RenderDish({dish}) {
         </div>
     )
 }
-function RenderComments({addComment,comments,dish}) {
+function RenderComments({postComment,comments,dish}) {
     console.log(dish)
     console.log(dish.id);
     const dishId=dish.id;
@@ -207,7 +207,7 @@ function RenderComments({addComment,comments,dish}) {
             <h3>Comments :</h3>
             <div>
                 {cmmnts}
-                <CommentForm dishId={dishId} addComment={addComment}/>
+                <CommentForm dishId={dishId} postComment={postComment}/>
             </div>
         </div>
     )
