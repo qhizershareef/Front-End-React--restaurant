@@ -10,9 +10,7 @@ import * as serviceWorker from './serviceWorker';
  
 //lets try without strict mode <React.StrictMode>
 ReactDOM.render(
- 
-    <App />,
-  document.getElementById('root')
+    <App />,document.getElementById('root')
 );
 
 serviceWorker.unregister();

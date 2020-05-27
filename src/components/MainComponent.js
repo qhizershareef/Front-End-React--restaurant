@@ -11,6 +11,9 @@ import {Switch,Route,Redirect,withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {postComment, fetchDishes, fetchComments, fetchPromos} from '../redux/ActionCreators';
 import {actions} from 'react-redux-form';
+
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
 // here the dishes,comments etc are received as props from App.js Provider component, since we used redux to handle this
 // there are methods provided by redux inorder to connect the state to Main component or other component
 const mapStateToProps = state=>{
@@ -76,16 +79,21 @@ class Main extends Component {
 
         return (
             <div>
-                <Header />
-                <Switch>
-                    <Route path="/home" component={HomePage}/>
-                    <Route exact path="/menu" component={()=> <Menu dishes={this.props.dishes}/>}/>
-                    <Route path="/menu/:dishId" component={DishWithId} />
-                    <Route exact path="/contactus" component={()=><Contact reset={this.props.resetFeedbackForm}/>} />
-                    <Route exact path="/aboutus" component={AboutUs} />
-                    <Redirect to="/home" /> {/* default */}
-                </Switch>
-                <Footer />
+                <Header/>
+                
+                <TransitionGroup>
+                    <CSSTransition key={this.props.location.key} classNames='page' timeout={300}> 
+                        <Switch location={this.props.location}>
+                            <Route path="/home" component={HomePage}/>
+                            <Route exact path="/menu" component={()=> <Menu dishes={this.props.dishes}/>}/>
+                            <Route path="/menu/:dishId" component={DishWithId} />
+                            <Route exact path="/contactus" component={()=><Contact reset={this.props.resetFeedbackForm}/>} />
+                            <Route exact path="/aboutus" component={AboutUs} />
+                            <Redirect to="/home" /> {/* default */}
+                        </Switch>
+                    </CSSTransition>    
+                </TransitionGroup>
+                <Footer/>
             </div>
         );
     }
