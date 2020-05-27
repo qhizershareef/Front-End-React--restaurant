@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardBody, CardText, Breadcrumb, BreadcrumbItem, Button, Modal, 
-    ModalBody, ModalHeader, Row, Col, Label } from 'reactstrap';
+import {
+    Card, CardImg, CardBody, CardText, Breadcrumb, BreadcrumbItem, Button, Modal,
+    ModalBody, ModalHeader, Row, Col, Label
+} from 'reactstrap';
 import Moment from 'moment';
 import { Link } from 'react-router-dom';
-import {LocalForm, Control, Errors} from 'react-redux-form';
-import {Loading} from './LoadingComponent';
-import {baseUrl} from '../shared/baseUrl';
+import { LocalForm, Control, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
+
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 
 
-const maxLength =(len)=>(val)=> !(val) || val.length <=15;
+const maxLength = (len) => (val) => !(val) || val.length <= 15;
 const minLength = (len) => (val) => val && (val.length >= len);
-const required=(val)=> val && val.length;
+const required = (val) => val && val.length;
 
 export class CommentForm extends Component {
     constructor(props) {
@@ -20,7 +24,7 @@ export class CommentForm extends Component {
             isModalOpen: false,
         }
         this.toggleModal = this.toggleModal.bind(this);
-        this.submitHandle= this.submitHandle.bind(this);
+        this.submitHandle = this.submitHandle.bind(this);
     }
     toggleModal() {
         this.setState({
@@ -28,11 +32,11 @@ export class CommentForm extends Component {
         })
         //alert(this.state.isModalOpen + " is the current state");
     }
-    submitHandle(values){
+    submitHandle(values) {
         //to understand how the comment is added go from here, first we handle submit by calling addcomment which is somehow linked to redux action
         this.toggleModal();
         alert(JSON.stringify(values));
-        this.props.postComment(this.props.dishId,values.rating,values.author,values.comment);
+        this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
     }
     render() {
         return (
@@ -67,7 +71,7 @@ export class CommentForm extends Component {
                                         placeholder="Your Name"
                                         className="form-control"
                                         validators={{
-                                            required,minLength: minLength(3), maxLength: maxLength(15)
+                                            required, minLength: minLength(3), maxLength: maxLength(15)
                                         }}
                                     />
                                     <Errors
@@ -126,31 +130,31 @@ const DishDetail = (props) => {
     const Dish = dish;  //note that the props is given a name and that is used as this.props.<name assigned to var>
     //const DishProps= this.props.selectedDish;
     console.log('this is any name for the props', Dish);
-    
+
     //console.log(Dish);
     //if (Dish == null) {
     //    return (<div>None Selected</div>)
     //}
-    if(props.isLoading){
-        return(
+    if (props.isLoading) {
+        return (
             <div className="container">
-                <div className="row">            
+                <div className="row">
                     <Loading />
                 </div>
             </div>
         );
     }
     else if (props.errMess) {
-        return(
+        return (
             <div className="container">
-                <div className="row">            
+                <div className="row">
                     <h4>{props.errMess}</h4>
                 </div>
             </div>
         );
     }
-    
-    else if(dish!=null){
+
+    else if (dish != null) {
         return (
             <div className="container">
                 <div className="row">
@@ -164,50 +168,67 @@ const DishDetail = (props) => {
                     </div>
                 </div>
                 <div className="row">
-                    <RenderDish dish={props.dish}/>
-                    <RenderComments postComment={props.postComment} dish={props.dish} comments={props.comments}/>
-                 </div>
-            </div>
-        )
-    }
-}
-function RenderDish({dish}) {
-    console.log(dish);
-    return (
-        <div className="col-12 col-md-5 m-1">
-            <Card key={dish.id} >
-                <CardImg width="100%" src={baseUrl+dish.image} alt={dish.name} />
-                <CardBody>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
-        </div>
-    )
-}
-function RenderComments({postComment,comments,dish}) {
-    console.log(dish)
-    console.log(dish.id);
-    const dishId=dish.id;
-    if (comments == null) {
-        return (<div>No Comments</div>)
-    }
-    const cmmnts = comments.map(comment => {
-        //refer moment.js to create date format 'MMMM,Do,YYYY'
-        return (
-            <div key={comment.id}>
-                <div >
-                    <p>{comment.comment}</p>
-                    <p>--{comment.author}, {Moment(comment.date).format('MMMM, Do ,YYYY') || comment.date}</p>
+                    <RenderDish dish={props.dish} />
+                    <RenderComments postComment={props.postComment} dish={props.dish} comments={props.comments} />
                 </div>
             </div>
         )
-    })
+    }
+}
+function DisplayComments({ comments }) {
+    return (
+        <Stagger in>
+            {
+                comments.map(comment => {
+                    //refer moment.js to create date format 'MMMM,Do,YYYY'
+                    return (
+                        <Fade in>
+                            <div key={comment.id}>
+                                <div >
+                                    <p>{comment.comment}</p>
+                                    <p>--{comment.author}, {Moment(comment.date).format('MMMM, Do ,YYYY') || comment.date}</p>
+                                </div>
+                            </div>
+                        </Fade>
+                    )
+                })}
+        </Stagger>
+    )
+}
+
+function RenderDish({ dish }) {
+    console.log(dish);
+    return (
+        <div className="col-12 col-md-5 m-1">
+            <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
+                <Card key={dish.id} >
+                    <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
+                    <CardBody>
+                        <CardText>{dish.description}</CardText>
+                    </CardBody>
+                </Card>
+            </FadeTransform>
+        </div>
+    )
+}
+function RenderComments({ postComment, comments, dish }) {
+    console.log(dish)
+    console.log(dish.id);
+    const dishId = dish.id;
+    if (comments == null) {
+        return (<div>No Comments</div>)
+    }
+
     return (
         <div className="col-md-5 col-12 m-1">
             <h3>Comments :</h3>
             <div>
-                {cmmnts}
-                <CommentForm dishId={dishId} postComment={postComment}/>
+                <DisplayComments comments={comments} />
+                <CommentForm dishId={dishId} postComment={postComment} />
             </div>
         </div>
     )
