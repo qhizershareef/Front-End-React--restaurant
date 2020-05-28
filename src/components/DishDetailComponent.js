@@ -186,7 +186,10 @@ function DisplayComments({ comments }) {
                             <div key={comment.id}>
                                 <div >
                                     <p>{comment.comment}</p>
-                                    <p>--{comment.author}, {Moment(comment.date).format('MMMM, Do ,YYYY') || comment.date}</p>
+                                    <p>
+                                        --{comment.author},
+                                          {Moment(comment.date).format('MMMM, Do ,YYYY') || comment.date}
+                                     </p>
                                 </div>
                             </div>
                         </Fade>

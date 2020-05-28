@@ -10,6 +10,56 @@ export const addComment = (comment) => ({
     payload:comment
 });
 
+export const addFeedback=(feedback)=>({
+    type:ActionTypes.ADD_FEEDBACK,
+    payload:feedback
+})
+
+export const postFeedback=(firstname,lastname,telnum,email,agree,contactType,message)=>(dispatch)=>{
+    const newFeedback={
+        firstname: firstname,
+        lastname:lastname,
+        telnum:telnum,
+        email:email,
+        agree:agree,
+        contactType:contactType,
+        message:message,
+    }
+    newFeedback.date= new Date().toISOString();
+    return fetch(baseUrl+'feedback',{
+        method:'POST',
+        body:JSON.stringify(newFeedback),
+        headers:{
+            'Content-Type':'application/json'
+        },
+        credentials:"same-origin"
+        })
+            .then(response => {
+                        if (response.ok) {
+                            return response;
+                        }
+                        else {
+                            var error = new Error('Error' + response.status + ':' + response.statusText);
+                            error.response = response;
+                            throw error;
+                        }
+                    },
+                        error => {
+                            var errMess = new Error(error.message);
+                            throw errMess;
+                        })
+        .then(response=>response.json())
+        .then(response=>{
+            dispatch(addFeedback(response)
+        )
+            alert('Thank you for your feedback'+JSON.stringify(response));
+    })
+        .catch(error=>{
+            console.log('Feedback error:'+ error.message)
+            alert('Feedback cannot be posted \n'+ error.message)
+        })
+}
+
 export const postComment = (dishId, rating, author, comment) => (dispatch) => {
 
     const newComment = {
@@ -19,7 +69,6 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => {
         comment: comment
     }
     newComment.date = new Date().toISOString();
-
     return fetch(baseUrl + 'comments', {
         method: 'POST',
         body: JSON.stringify(newComment),
@@ -52,10 +101,10 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => {
 
 }
 
-
-export const fetchDishes = () => (dispatch) => {
+console.log('action creators')
+export const fetchDishes = () =>(dispatch) => {
     dispatch(dishesLoading(true));
-
+    console.log('under FetchDishes')
     return fetch(baseUrl + 'dishes')
         .then(response => {
             if (response.ok) {
@@ -78,7 +127,28 @@ export const fetchDishes = () => (dispatch) => {
         })
 }
 
-
+export const fetchLeaders=()=>(dispatch)=>{
+    dispatch(leadersLoading(true))
+    console.log('under fetchLeaders');
+    return fetch(baseUrl+'leaders')
+        .then(response=> {
+                if(response.ok){
+                    return response;
+                }
+                else{
+                    var error=new Error('Error' + response.status + ': '+ response.statusText);
+                    error.response=response;
+                    throw error;
+                }
+            },
+                error=>{
+                    var errmess = new Error(error.message);
+                    throw errmess;
+            })
+            .then(response=>response.json())
+            .then(leaders=>dispatch(addLeaders(leaders)))
+            .catch(error=>dispatch(leadersFailed(error)));
+}
 
 
 
@@ -129,6 +199,11 @@ export const addComments = (comments) => ({
     payload: comments
 })
 
+export const addLeaders = (leaders)=>({
+    type:ActionTypes.ADD_LEADERS,
+    payload:leaders
+})
+
 export const fetchPromos = () => (dispatch) => {
 
     dispatch(promosLoading());
@@ -154,6 +229,17 @@ export const fetchPromos = () => (dispatch) => {
 
 export const promosLoading = () => ({
     type: ActionTypes.PROMOS_LOADING
+});
+
+
+export const leadersLoading=()=>({
+    type: ActionTypes.LEADERS_LOADING
+})
+
+
+export const leadersFailed=(errmess)=>({
+    type:ActionTypes.LEADERS_FAILED,
+    payload:errmess
 });
 
 export const promosFailed = (errmess) => ({

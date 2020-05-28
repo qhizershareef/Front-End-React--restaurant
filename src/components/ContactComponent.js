@@ -4,6 +4,7 @@ import { Breadcrumb, BreadcrumbItem, Button, Row, Label, Col } from 'reactstrap'
 import { Form, Control, Errors, actions } from 'react-redux-form';
 //simpliying the form and form validation using react-redux and it saves much of the code and doesn't have to store state or anything
 
+
 const required= (val) => val && val.length;
 const maxLength =(len)=>(val)=> !(val) || val.length <=15;
 const minLength = (len) => (val) => val && (val.length >= len);
@@ -23,7 +24,8 @@ class Contact extends Component {
 
     handleSubmit(values) {
         console.log("The current state is" + JSON.stringify(values));
-        alert("The current state is" + JSON.stringify(values));
+        this.props.postFeedback(values.firstname,values.lastname,values.telnum,values.email,values.agree,values.contactType,values.message);
+        //alert("The current state is" + JSON.stringify(values));
         //reset the form from the props reset
         this.props.reset();
     }

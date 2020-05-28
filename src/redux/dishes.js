@@ -1,7 +1,8 @@
 import * as ActionTypes from './ActionTypes';
 
 //change the state to an object with isLoading, errmess, dishes[],
-export const Dishes=(state = { isLoading: true,
+export const Dishes=(state = { 
+    isLoading: true,
     errMess: null,
     dishes:[]}, action) => {
     switch (action.type) {
